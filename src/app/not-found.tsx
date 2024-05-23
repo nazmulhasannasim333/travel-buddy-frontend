@@ -19,9 +19,7 @@ const NotFoundPage = () => {
           misspelling.
         </Typography>
         <Link href="/">
-          <Button variant="contained" style={{ marginTop: "20px" }}>
-            Return home page
-          </Button>
+          <Button style={{ marginTop: "20px" }}>Return home page</Button>
         </Link>
       </Box>
     </Stack>
