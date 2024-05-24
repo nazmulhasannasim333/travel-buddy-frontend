@@ -84,7 +84,7 @@ const RegisterPage = () => {
             fontWeight={600}
             my={1}
           >
-            Patient Register
+             Register
           </Typography>
 
           {error && (

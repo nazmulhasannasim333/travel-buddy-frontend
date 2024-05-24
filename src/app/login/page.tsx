@@ -12,6 +12,7 @@ import {
   Grid,
   Stack,
   Typography,
+  TextField,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,6 +20,7 @@ import { useState } from "react";
 import { FieldValues } from "react-hook-form";
 // import { toast } from "sonner";
 import { z } from "zod";
+import backgroundImage from '@/assets/travel-photos-with-camera-wooden-table.jpg';
 
 const loginValidationSchema = z.object({
   usernameOrEmail: z.string({
@@ -33,109 +35,78 @@ const LoginPage = () => {
 
   const handleLogin = async (data: FieldValues) => {
     console.log("data", data);
-    // try {
-    //   const res = await userLogin(data);
-    //   if (res.success) {
-    //     storeUserInfo(res?.data?.accessToken);
-    //     router.push("/dashboard");
-    //     toast.success(res.message);
-    //   } else {
-    //     setError(res.message);
-    //   }
-    // } catch (error: any) {
-    //   console.error(error);
-    // }
   };
 
   return (
-    <Container>
-      <Stack
+    <Container maxWidth="sm">
+      <Box
         sx={{
-          justifyContent: "center",
+          backgroundImage: `url(${backgroundImage.src})`,
+          backgroundSize: "cover",
+          minHeight: "100vh",
+          display: "flex",
           alignItems: "center",
-          height: "100vh",
+          justifyContent: "center",
+          padding: "0 10px",
         }}
       >
-        <Box
-          sx={{
-            maxWidth: "500px",
-            width: "100%",
-            boxShadow: 1,
-            borderRadius: 2,
-            p: 4,
-          }}
-        >
+        <Container maxWidth="xs">
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: "8px",
+              padding: "24px",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Avatar alt="logo" src={logo.src} sx={{ width: 56, height: 56 }} />
-          </Box>
-          <Typography
-            variant="h5"
-            component="h2"
-            textAlign="center"
-            fontWeight={600}
-            my={1}
-          >
-            Travel Buddy Login
-          </Typography>
-          {error && (
-            <Typography
-              variant="body1"
-              component="p"
-              textAlign="center"
-              fontWeight={600}
-              sx={{
-                backgroundColor: "#ffebe8",
-                border: "1px solid #dd3c10",
-                mt: 3,
-                p: 1,
-              }}
-            >
-              {error}
+            <Typography variant="h5" component="h2" textAlign="center" mb={4} color={'purple'} fontSize={'bold'}>
+              Travel Buddy Login
             </Typography>
-          )}
 
-          {/* Form Section  */}
-          <TBForm
-            onSubmit={handleLogin}
-            resolver={zodResolver(loginValidationSchema)}
-          >
-            <Grid container spacing={2} my={2}>
-              <Grid item lg={12}>
-                <TBInput name="usernameOrEmail" label="Username Or Email" />
-              </Grid>
-              <Grid item lg={12}>
-                <TBInput name="password" label="Password" type="password" />
-              </Grid>
-            </Grid>
-            <Button
-              fullWidth={true}
-              type="submit"
-              sx={{
-                my: 1,
-              }}
-            >
-              Login
-            </Button>
-          </TBForm>
-          <Typography
-            sx={{
-              textAlign: "center",
-              mt: 1,
-              "& a": {
-                color: "primary.main",
-              },
-            }}
-          >
-            Don&apos;t have an account?{" "}
-            <Link href="/register">Create an account</Link>
-          </Typography>
-        </Box>
-      </Stack>
+            <form onSubmit={handleLogin}>
+              <TextField
+                fullWidth
+                label="Username or Email"
+                variant="outlined"
+                margin="normal"
+                name="usernameOrEmail"
+                required
+              />
+              <TextField
+                fullWidth
+                label="Password"
+                variant="outlined"
+                margin="normal"
+                type="password"
+                name="password"
+                required
+              />
+              <Button
+                fullWidth
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{ mt: 3 }}
+              >
+                Login
+              </Button>
+            </form>
+
+            <Box sx={{ textAlign: "center", mt: 2 }}>
+              <Typography variant="body1" sx={{ color: "#333" }}>
+                Dont have an account?{" "}
+                <Button
+                  color="primary"
+                  variant="text"
+                  onClick={() => router.push("/register")}
+                >
+                  Create an account
+                </Button>
+              </Typography>
+            </Box>
+          </Box>
+        </Container>
+      </Box>
     </Container>
   );
 };
