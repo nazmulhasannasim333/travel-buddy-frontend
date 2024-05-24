@@ -18,7 +18,7 @@ type TTBInputProps = {
 const TBInput = ({
   name,
   label,
-  margin = "normal",
+  margin = "dense",
   type = "text",
   size = "small",
   fullWidth = true,

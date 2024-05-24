@@ -2,6 +2,7 @@ import { MenuItem, SxProps, TextField } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
 
 type TTBSelectProps = {
+  margin?: "normal" | "dense" | "none";
   name: string;
   label?: string;
   items: string[];
@@ -12,6 +13,7 @@ type TTBSelectProps = {
 };
 
 const TBSelect = ({
+  margin = "dense",
   name,
   label,
   items,
@@ -30,6 +32,7 @@ const TBSelect = ({
           {...field}
           label={label}
           select
+          margin={margin}
           variant="outlined"
           size={size}
           fullWidth={fullWidth}
