@@ -1,15 +1,11 @@
-import Header from "@/components/Headers/Header";
 import HeroSection from "@/components/HeroSection/HeroSection";
 import SearchBar from "@/components/SearchBar/SearchBar";
-import Footer from "@/components/Shared/Footer/Footer";
 
 import { Container, Grid, Typography, Button } from "@mui/material";
-
 
 const HomePage = () => {
   return (
     <div>
-      <Header />
       <HeroSection />
       <Container maxWidth="lg">
         <SearchBar />
@@ -32,7 +28,6 @@ const HomePage = () => {
           See More
         </Button>
       </Container>
-      <Footer />
     </div>
   );
 };
