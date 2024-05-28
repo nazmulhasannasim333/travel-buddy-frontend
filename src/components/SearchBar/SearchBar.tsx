@@ -9,30 +9,38 @@ const SearchBar = () => {
         justifyContent: "center",
         alignItems: "center",
         gap: 2,
-        marginTop: "-30px",
-        padding: "0 20px",
-        height: "80px", // Adjust height
-        width: "100%", // Adjust width
+        marginTop: "-40px",
+        padding: "10px 20px",
+        height: "auto",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        borderRadius: "10px",
+        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
       }}
     >
       <TextField
         label="Destination"
         variant="outlined"
         sx={{
-          width: "200px", // Adjust width
+          width: "250px",
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              borderColor: "#2196f3", // Change border color
+              borderColor: "#ffffff",
             },
             "&:hover fieldset": {
-              borderColor: "#1976d2", // Change border color on hover
+              borderColor: "#FF4081",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#2196f3", // Change border color when focused
+              borderColor: "#FF4081",
             },
+            backgroundColor: "#ffffff",
+            borderRadius: "10px",
           },
           "& .MuiInputBase-input": {
-            color: "#333", // Change font color
+            color: "#333",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#333",
           },
         }}
       />
@@ -42,20 +50,25 @@ const SearchBar = () => {
         InputLabelProps={{ shrink: true }}
         variant="outlined"
         sx={{
-          width: "200px", // Adjust width
+          width: "250px",
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              borderColor: "#2196f3", // Change border color
+              borderColor: "#ffffff",
             },
             "&:hover fieldset": {
-              borderColor: "#1976d2", // Change border color on hover
+              borderColor: "#FF4081",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#2196f3", // Change border color when focused
+              borderColor: "#FF4081",
             },
+            backgroundColor: "#ffffff",
+            borderRadius: "10px",
           },
           "& .MuiInputBase-input": {
-            color: "#333", // Change font color
+            color: "#333",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#333",
           },
         }}
       />
@@ -63,33 +76,39 @@ const SearchBar = () => {
         label="Travel Type"
         variant="outlined"
         sx={{
-          width: "200px", // Adjust width
+          width: "250px",
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
-              borderColor: "#2196f3", // Change border color
+              borderColor: "#ffffff",
             },
             "&:hover fieldset": {
-              borderColor: "#1976d2", // Change border color on hover
+              borderColor: "#FF4081",
             },
             "&.Mui-focused fieldset": {
-              borderColor: "#2196f3", // Change border color when focused
+              borderColor: "#FF4081",
             },
+            backgroundColor: "#ffffff",
+            borderRadius: "10px",
           },
           "& .MuiInputBase-input": {
-            color: "#333", // Change font color
+            color: "#333",
+          },
+          "& .MuiInputLabel-root": {
+            color: "#333",
           },
         }}
       />
       <Button
         variant="contained"
-        color="primary"
         sx={{
-          height: "60%", // Adjust height
-          borderRadius: "30px", // Adjust border radius for a rounded button
-          backgroundColor: "green", // Change background color
-          color: "#fff", // Change font color
+          height: "60px",
+          borderRadius: "30px",
+          backgroundColor: "#FF4081",
+          color: "#fff",
+          padding: "0 30px",
+          fontSize: "1.2rem",
           "&:hover": {
-            backgroundColor: "#1976d2", // Change hover background color
+            backgroundColor: "#F50057",
           },
         }}
       >

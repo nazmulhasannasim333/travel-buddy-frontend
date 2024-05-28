@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Image from "next/image";
@@ -17,6 +18,7 @@ import React from "react";
 
 const UserManagement = () => {
   const { data, isLoading } = useGetAllUserQuery(undefined);
+  console.log(data);
 
   const [status, setStatus] = React.useState("");
 
@@ -90,7 +92,8 @@ const UserManagement = () => {
     <Box my={2}>
       {!isLoading ? (
         <Box my={2}>
-          <DataGrid rows={data?.data} columns={columns} hideFooter={true} />
+          {/* <DataGrid rows={data?.data} columns={columns} hideFooter={true} /> */}
+          <Typography>Loading..</Typography>
         </Box>
       ) : (
         <h1>Loading.....</h1>

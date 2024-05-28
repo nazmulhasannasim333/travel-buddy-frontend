@@ -26,7 +26,7 @@ const HeroSection = () => {
       >
         Find Your Perfect Travel Buddy!
       </Typography>
-      <Link href="/post-trip" passHref>
+      <Link href="/travels" passHref>
         <Button
           variant="contained"
           sx={{

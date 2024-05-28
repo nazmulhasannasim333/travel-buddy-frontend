@@ -1,4 +1,6 @@
 "use client";
+import { useRegisterMutation } from "@/redux/features/register/registerApi";
+import { useAppDispatch } from "@/redux/hooks";
 import {
   Box,
   Button,
@@ -10,15 +12,45 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const Register = () => {
   const [error, setError] = useState("");
-  const router = useRouter();
+  const [registerUser] = useRegisterMutation();
   const { register, handleSubmit } = useForm();
+  const router = useRouter();
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
+    const toastId = toast.loading("Please wait...");
+    try {
+      const profile = {
+        bio: "Passionate about helping people find their lost items.",
+        age: 20,
+      };
+      const userInfo = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        profile,
+      };
+      console.log(userInfo);
+      const res: any = await registerUser(userInfo);
+      console.log(res);
+      if (res?.error) {
+        toast.error(`${data.email} Already used`, {
+          id: toastId,
+          duration: 2000,
+        });
+      } else {
+        toast.success("Registration successful!", {
+          id: toastId,
+          duration: 2000,
+        });
+        router.push("/login");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!", { id: toastId, duration: 2000 });
+    }
   };
 
   return (

@@ -1,4 +1,8 @@
 "use client";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { TUser, setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { verifyToken } from "@/utils/verifyToken";
 import {
   Box,
   Button,
@@ -10,15 +14,29 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
   const { register, handleSubmit } = useForm();
+  const [userLogin] = useLoginMutation();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (data: FieldValues) => {
-    console.log(data);
+    const toastId = toast.loading("Logging in...");
+
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    console.log(userInfo);
+    const res = await userLogin(userInfo).unwrap();
+    console.log(res);
+    const user = verifyToken(res.data.token) as TUser;
+    dispatch(setUser({ user, token: res.data.token }));
+    toast.success("Logged in", { id: toastId, duration: 2000 });
+    router.push(`/`);
   };
 
   return (
