@@ -22,8 +22,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme, useMediaQuery } from "@mui/material";
 import logo from "@/assets/logo.png";
-import { useAppSelector } from "@/redux/hooks";
-import { selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -34,6 +36,15 @@ const Header = () => {
   const user = useAppSelector(selectCurrentUser);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    const toastId = toast.loading("loading...");
+    dispatch(logout());
+    router.push("/login");
+    toast.success("Logged out", { id: toastId, duration: 2000 });
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -162,7 +173,7 @@ const Header = () => {
               </Link>
               {isMounted && user ? (
                 <Box sx={{ flexGrow: 0 }}>
-                  <Tooltip title="Open settings">
+                  <Tooltip title="Open Menu">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                       <Avatar
                         alt={user?.name || "Nasim"}
@@ -180,11 +191,12 @@ const Header = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    {settings.map((setting, i) => (
-                      <MenuItem key={i} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
-                      </MenuItem>
-                    ))}
+                    <MenuItem onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">Profile</Typography>
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      <Typography textAlign="center">Logout</Typography>
+                    </MenuItem>
                   </Menu>
                 </Box>
               ) : (
