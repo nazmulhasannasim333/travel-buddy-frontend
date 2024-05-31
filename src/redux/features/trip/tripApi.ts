@@ -11,7 +11,16 @@ const TripApi = baseApi.injectEndpoints({
       },
       providesTags: ["trips"],
     }),
+    getTrip: builder.query({
+      query: (id) => {
+        return {
+          url: `/trips/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["trips"],
+    }),
   }),
 });
 
-export const { useGetAllTripsQuery } = TripApi;
+export const { useGetAllTripsQuery, useGetTripQuery } = TripApi;

@@ -4,7 +4,8 @@ import { RootState } from "../../store";
 export type TUser = {
   name: string;
   email: string;
-  role: "user" | "manager";
+  userId: string;
+  role: "user" | "admin";
   iat: number;
   exp: number;
 };
