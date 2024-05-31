@@ -13,30 +13,6 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 
-const travelTips = [
-  {
-    destination: "Paris, France",
-    photo: "/images/hero.jpg",
-    briefDescription: "Explore the city of love with our travel guide.",
-    travelDates: "June 15 - June 20, 2024",
-    // fullDetailsLink: "/trips/paris-france",
-  },
-  {
-    destination: "Tokyo, Japan",
-    photo: "/images/hero.jpg",
-    briefDescription: "Discover the vibrant culture of Tokyo.",
-    travelDates: "July 10 - July 15, 2024",
-    // fullDetailsLink: "/trips/tokyo-japan",
-  },
-  {
-    destination: "New York, USA",
-    photo: "/images/hero1.jpg",
-    briefDescription: "Experience the hustle and New York City.",
-    travelDates: "August 5 - August 10, 2024",
-    // fullDetailsLink: "/trips/new-york-usa",
-  },
-];
-
 const cardVariants = {
   offscreen: {
     y: 300,
@@ -55,7 +31,7 @@ const cardVariants = {
 
 const TravelTips = () => {
   const { data: trips } = useGetAllTripsQuery(undefined);
-  console.log(trips);
+  // console.log(trips);
 
   return (
     <Box
@@ -132,7 +108,7 @@ const TravelTips = () => {
                         Travel Dates: {trip?.startDate} - {trip?.endDate}
                       </Typography>
                     </Box>
-                    <Link href={`trip-details/id`}>
+                    <Link href={`trip-details/${trip.id}`}>
                       <Button
                         variant="contained"
                         sx={{
