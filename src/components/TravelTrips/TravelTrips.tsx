@@ -54,8 +54,8 @@ const cardVariants = {
 };
 
 const TravelTips = () => {
-  // const { data } = useGetAllTripsQuery(undefined);
-  // console.log(data);
+  const { data: trips } = useGetAllTripsQuery(undefined);
+  console.log(trips);
 
   return (
     <Box
@@ -77,8 +77,8 @@ const TravelTips = () => {
           Travel Tips and Guides
         </Typography>
         <Grid container spacing={4}>
-          {travelTips.map((tip, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+          {trips?.data?.map((trip: any) => (
+            <Grid item xs={12} sm={6} md={4} key={trip.id}>
               <motion.div
                 initial="offscreen"
                 whileInView="onscreen"
@@ -102,8 +102,8 @@ const TravelTips = () => {
                   <CardMedia
                     component="img"
                     height="200"
-                    image={tip.photo}
-                    alt={tip.destination}
+                    image={trip?.photo}
+                    alt={trip?.destination}
                     sx={{ filter: "brightness(0.85)" }}
                   />
                   <CardContent
@@ -123,13 +123,13 @@ const TravelTips = () => {
                         fontWeight="bold"
                         sx={{ color: "#444", mb: 1 }}
                       >
-                        {tip.destination}
+                        {trip.destination}
                       </Typography>
                       <Typography variant="body2" color="textSecondary" mb={1}>
-                        {tip.briefDescription}
+                        {trip?.description}
                       </Typography>
                       <Typography variant="body2" color="textSecondary" mb={2}>
-                        Travel Dates: {tip.travelDates}
+                        Travel Dates: {trip?.startDate} - {trip?.endDate}
                       </Typography>
                     </Box>
                     <Link href={`trip-details/id`}>
