@@ -23,7 +23,7 @@ const TravelDetailsPage: React.FC = ({ params }: any) => {
         userId: userId,
       };
       const res: any = await requestBuddy(data);
-      if (res.success === true) {
+      if (res?.data?.success === true) {
         toast.success("Travel buddy request sent successfully", {
           id: toastId,
           duration: 2000,

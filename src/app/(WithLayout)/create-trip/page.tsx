@@ -7,28 +7,55 @@ import {
   Button,
   Container,
   Grid,
+  Autocomplete,
 } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Controller, useForm, FieldValues } from "react-hook-form";
+import { useCreateTripMutation } from "@/redux/features/trip/tripApi";
+
+// Initial sample options for the activities field
+const initialActivityOptions = [
+  { label: "Hiking", value: "hiking" },
+  { label: "Swimming", value: "swimming" },
+  { label: "Sightseeing", value: "sightseeing" },
+  { label: "Camping", value: "camping" },
+];
 
 const PostTravelTrip = () => {
-  const [formData, setFormData] = useState({
-    destination: "dhaka",
-    description: "",
-    travelDates: "",
-    travelType: "",
-    photos: [],
-  });
+  const user = useAppSelector(selectCurrentUser);
+  const router = useRouter();
+  const [createTripTravel] = useCreateTripMutation();
+  const { register, handleSubmit, control, reset } = useForm();
+  const [activityOptions, setActivityOptions] = useState(
+    initialActivityOptions
+  );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  if (!user) {
+    router.push("/login");
+    return null;
+  }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Logic to submit form data
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Creating trip...");
+    try {
+      const activities = data.activities.map((activity: any) => activity.label);
+
+      const budget = Number(data.budget);
+      const updatedData = { ...data, activities, budget };
+      const res: any = await createTripTravel(updatedData);
+      if (res?.data?.success === true) {
+        toast.success("Trip created successfully", { id: toastId });
+      }
+      reset();
+    } catch (error) {
+      toast.error("Something went wrong", {
+        id: toastId,
+        duration: 2000,
+      });
+    }
   };
 
   return (
@@ -37,74 +64,139 @@ const PostTravelTrip = () => {
         <Typography variant="h4" align="center" mb={4}>
           Post a Travel/Trip
         </Typography>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                name="destination"
                 label="Destination"
                 variant="outlined"
                 fullWidth
                 required
-                value={formData.destination}
-                onChange={handleChange}
+                {...register("destination")}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                type="date"
+                fullWidth
+                required
+                {...register("startDate")}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant="outlined"
+                type="date"
+                fullWidth
+                required
+                {...register("endDate")}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Trip Type"
+                variant="outlined"
+                fullWidth
+                required
+                {...register("type")}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Trip Photo"
+                variant="outlined"
+                fullWidth
+                required
+                {...register("photo")}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                type="number"
+                label="Budget"
+                variant="outlined"
+                fullWidth
+                required
+                {...register("budget")}
+              />
+            </Grid>
+            {/* Multi-selection field for activities */}
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="activities"
+                control={control}
+                defaultValue={[]}
+                render={({ field }) => (
+                  <Autocomplete
+                    multiple
+                    freeSolo
+                    options={activityOptions}
+                    getOptionLabel={(option) => option.label || option}
+                    isOptionEqualToValue={(option, value) =>
+                      option.value === value.value
+                    }
+                    value={field.value}
+                    onChange={(event, newValue) => {
+                      const lastAddedOption = newValue[newValue.length - 1];
+                      if (typeof lastAddedOption === "string") {
+                        const newOption = {
+                          label: lastAddedOption,
+                          value: lastAddedOption
+                            .toLowerCase()
+                            .replace(/ /g, "-"),
+                        };
+                        setActivityOptions([...activityOptions, newOption]);
+                        field.onChange([...field.value, newOption]);
+                      } else {
+                        field.onChange(newValue);
+                      }
+                    }}
+                    filterOptions={(options, params) => {
+                      const filtered = options.filter((option) =>
+                        option.label
+                          .toLowerCase()
+                          .includes(params.inputValue.toLowerCase())
+                      );
+
+                      // Suggest the creation of a new value
+                      if (
+                        params.inputValue !== "" &&
+                        !filtered.some(
+                          (option) =>
+                            option.label.toLowerCase() ===
+                            params.inputValue.toLowerCase()
+                        )
+                      ) {
+                        filtered.push({
+                          label: `"${params.inputValue}"`,
+                          value: params.inputValue,
+                        });
+                      }
+
+                      return filtered;
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Select Activities"
+                        placeholder="Type to search"
+                      />
+                    )}
+                  />
+                )}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                name="description"
                 label="Detailed Description"
                 variant="outlined"
                 fullWidth
                 required
                 multiline
                 rows={4}
-                value={formData.description}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="startDate"
-                variant="outlined"
-                type="date"
-                fullWidth
-                required
-                value={formData.travelDates}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="endDate"
-                variant="outlined"
-                type="date"
-                fullWidth
-                required
-                value={formData.travelDates}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="travelType"
-                label="Travel Type"
-                variant="outlined"
-                fullWidth
-                required
-                value={formData.travelType}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                name="travelType"
-                label="Trip Photo"
-                variant="outlined"
-                fullWidth
-                required
-                value={formData.travelType}
-                onChange={handleChange}
+                {...register("description")}
               />
             </Grid>
             <Grid item xs={12}>

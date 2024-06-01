@@ -4,6 +4,7 @@ const buddyApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     requestBuddy: builder.mutation({
       query: (data) => {
+        console.log(data);
         return {
           url: `/trip/${data.tripId}/request`,
           method: "POST",
