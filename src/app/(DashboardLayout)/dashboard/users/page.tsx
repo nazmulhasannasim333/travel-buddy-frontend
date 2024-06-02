@@ -2,7 +2,6 @@
 import {
   Box,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -10,93 +9,103 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import Image from "next/image";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { toast } from "sonner";
-import { useGetAllUserQuery } from "@/redux/features/auth/authApi";
+import {
+  useChangeUserRoleMutation,
+  useChangeUserStatusMutation,
+  useGetAllUserQuery,
+} from "@/redux/features/auth/authApi";
 import React from "react";
+import { toast } from "sonner";
 
 const UserManagement = () => {
   const { data, isLoading } = useGetAllUserQuery(undefined);
-  console.log(data);
+  const [changeStatus] = useChangeUserStatusMutation();
+  const [changeRole] = useChangeUserRoleMutation();
 
-  const [status, setStatus] = React.useState("");
+  const handleStatusChange = async (
+    event: SelectChangeEvent,
+    userId: string
+  ) => {
+    const newStatus = event.target.value;
+    const updateStatus = { userId, status: { status: newStatus } };
+    const toastId = toast.loading("Changing status...");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
+    try {
+      const res = await changeStatus(updateStatus);
+      if (res?.data?.success === true) {
+        toast.success("Status changed successfully", { id: toastId });
+      }
+    } catch (error) {
+      toast.error("Failed to change status", { id: toastId });
+    }
   };
 
-  // console.log(data);
+  const handleRoleChange = async (event: SelectChangeEvent, userId: string) => {
+    const newRole = event.target.value;
+    const updateRole = { userId, role: { role: newRole } };
+    const toastId = toast.loading("Changing role...");
+
+    try {
+      const res = await changeRole(updateRole);
+      if (res?.data?.success === true) {
+        toast.success("Role changed successfully", { id: toastId });
+      }
+    } catch (error) {
+      toast.error("Failed to change role", { id: toastId });
+    }
+  };
+
   const columns: GridColDef[] = [
-    { field: "name", headerName: "Name", width: 400 },
+    { field: "name", headerName: "Name", width: 300 },
+    { field: "email", headerName: "Email", width: 300 },
     {
-      field: "email",
-      headerName: "Email",
-      width: 400,
+      field: "status",
+      headerName: "Status",
+      width: 300,
+      renderCell: (params) => (
+        <FormControl fullWidth>
+          <Select
+            value={params.value}
+            onChange={(event) => handleStatusChange(event, params.row.id)}
+          >
+            <MenuItem value="ACTIVE">Active</MenuItem>
+            <MenuItem value="DEACTIVE">Deactive</MenuItem>
+          </Select>
+        </FormControl>
+      ),
     },
     {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {status || "Active"}
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={status}
-                label={status || "Active"}
-                onChange={handleChange}
-              >
-                <MenuItem value={"active"}>Active</MenuItem>
-                <MenuItem value={"deactive"}>Deactive</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        );
-      },
-    },
-    {
-      field: "action",
-      headerName: "Action",
-      flex: 1,
-      renderCell: ({ row }) => {
-        return (
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">
-                {status || "Active"}
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={status}
-                label={status || "Active"}
-                onChange={handleChange}
-              >
-                <MenuItem value={"active"}>User</MenuItem>
-                <MenuItem value={"deactive"}>Admin</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        );
-      },
+      field: "role",
+      headerName: "Role",
+      width: 300,
+      renderCell: (params) => (
+        <FormControl fullWidth>
+          <Select
+            value={params.value}
+            onChange={(event) => handleRoleChange(event, params.row.id)}
+          >
+            <MenuItem value="USER">User</MenuItem>
+            <MenuItem value="ADMIN">Admin</MenuItem>
+          </Select>
+        </FormControl>
+      ),
     },
   ];
 
   return (
-    <Box my={2}>
-      {!isLoading ? (
-        <Box my={2}>
-          {/* <DataGrid rows={data?.data} columns={columns} hideFooter={true} /> */}
-          <Typography>Loading..</Typography>
-        </Box>
+    <Box my={2} width="100%">
+      {isLoading ? (
+        <Typography>Loading...</Typography>
       ) : (
-        <h1>Loading.....</h1>
+        <Box my={2} width="100%">
+          <DataGrid
+            rows={data?.data || []}
+            columns={columns}
+            getRowId={(row) => row.id}
+            autoHeight
+            hideFooter
+          />
+        </Box>
       )}
     </Box>
   );

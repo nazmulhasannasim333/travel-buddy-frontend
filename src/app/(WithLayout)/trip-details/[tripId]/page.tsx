@@ -2,7 +2,6 @@
 import React from "react";
 import { Box, Typography, Button, Container, Grid } from "@mui/material";
 import Image from "next/image";
-import logo from "@/assets/images/hero.jpg";
 import { useGetTripQuery } from "@/redux/features/trip/tripApi";
 import { useAppSelector } from "@/redux/hooks";
 import { selectCurrentUser } from "@/redux/features/auth/authSlice";
@@ -45,7 +44,7 @@ const TravelDetailsPage: React.FC = ({ params }: any) => {
             {/* Display multiple photos */}
             <Box>
               <Image
-                src={logo}
+                src={trip?.data?.photo}
                 alt="Trip Photo"
                 width={800}
                 height={600}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -9,8 +9,20 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Sidebar from "../Sidebar/Sidebar";
-import { Avatar, InputAdornment, Stack, TextField } from "@mui/material";
+import {
+  Avatar,
+  InputAdornment,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import Link from "next/link";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const drawerWidth = 320;
 
@@ -92,6 +104,10 @@ interface DashboardDrawerProps {
 const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const user = useAppSelector(selectCurrentUser);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -99,6 +115,21 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    const toastId = toast.loading("loading...");
+    dispatch(logout());
+    router.push("/login");
+    toast.success("Logged out", { id: toastId, duration: 2000 });
+  };
+
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   return (
@@ -161,7 +192,12 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
                 gap: 2,
               }}
             >
-              <Stack direction="row" alignItems="center" spacing={2}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                spacing={2}
+                onClick={handleOpenUserMenu}
+              >
                 <Avatar alt="Nasim" src="/static/images/avatar/1.jpg" />
                 <Box>
                   <Typography
@@ -171,7 +207,7 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
                       fontWeight: "600",
                     }}
                   >
-                    Md Nasim Hosen
+                    {user?.name}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -180,9 +216,30 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
                       fontWeight: "300",
                     }}
                   >
-                    nasim@gmail.com
+                    {user?.email}
                   </Typography>
                 </Box>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                  keepMounted
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  <MenuItem
+                    component={Link}
+                    href="/profile"
+                    onClick={handleCloseUserMenu}
+                  >
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <Typography textAlign="center">Logout</Typography>
+                  </MenuItem>
+                </Menu>
               </Stack>
             </Box>
           </Box>
@@ -205,7 +262,9 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
               gap: "8px",
             }}
           >
-            <Typography variant="h4">Travel Buddy</Typography>
+            <Link href="/">
+              <Typography variant="h4">Travel Buddy</Typography>
+            </Link>
           </Box>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === "rtl" ? (

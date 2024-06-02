@@ -84,6 +84,9 @@ const Header = () => {
         <ListItem component="a" href="/about" button>
           <ListItemText primary="About Us" />
         </ListItem>
+        <ListItem component="a" href="/travels" button>
+          <ListItemText primary="Travels" />
+        </ListItem>
         <ListItem component="a" href="/login" button>
           <ListItemText primary="Login" />
         </ListItem>
@@ -171,6 +174,26 @@ const Header = () => {
                   About Us
                 </Button>
               </Link>
+              {user && (
+                <>
+                  <Link href="/travels" passHref>
+                    <Button
+                      variant="text"
+                      sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
+                    >
+                      Travels
+                    </Button>
+                  </Link>
+                  <Link href="/dashboard" passHref>
+                    <Button
+                      variant="text"
+                      sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                </>
+              )}
               {isMounted && user ? (
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open Menu">
@@ -191,7 +214,11 @@ const Header = () => {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem
+                      component={Link}
+                      href="/profile"
+                      onClick={handleCloseUserMenu}
+                    >
                       <Typography textAlign="center">Profile</Typography>
                     </MenuItem>
                     <MenuItem onClick={handleLogout}>

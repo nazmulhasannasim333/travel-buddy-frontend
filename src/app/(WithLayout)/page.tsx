@@ -1,5 +1,4 @@
 import HeroSection from "@/components/HeroSection/HeroSection";
-import SearchBar from "@/components/SearchBar/SearchBar";
 import TravelCard from "@/components/TravelCard/TravelCard";
 import TravelInspiration from "@/components/TravelInspiration/TravelInspiration";
 import TravelTips from "@/components/TravelTrips/TravelTrips";
@@ -11,7 +10,6 @@ const HomePage = () => {
     <div>
       <HeroSection />
       <Container maxWidth="lg">
-        <SearchBar />
         <TravelTips />
         <TravelCard />
         <TravelInspiration />

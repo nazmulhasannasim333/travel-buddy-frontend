@@ -15,7 +15,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const Register = () => {
-  const [error, setError] = useState("");
   const [registerUser] = useRegisterMutation();
   const { register, handleSubmit } = useForm();
   const router = useRouter();

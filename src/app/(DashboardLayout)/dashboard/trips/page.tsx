@@ -15,42 +15,39 @@ import EditIcon from "@mui/icons-material/Edit";
 import { toast } from "sonner";
 import { useGetAllUserQuery } from "@/redux/features/auth/authApi";
 import React from "react";
-import { useGetAllTripsQuery } from "@/redux/features/trip/tripApi";
+import {
+  useDeleteTripMutation,
+  useGetAllTripsQuery,
+} from "@/redux/features/trip/tripApi";
 
 const TripManagement = () => {
   const { data: trips, isLoading } = useGetAllTripsQuery(undefined);
-  console.log(trips);
+  const [deleteTrip] = useDeleteTripMutation();
 
-  const [status, setStatus] = React.useState("");
+  const handleDelete = async (id: string) => {
+    const toastId = toast.loading("Deleting trip...");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setStatus(event.target.value as string);
+    try {
+      const res = await deleteTrip(id);
+      if (res?.data?.success === true) {
+        toast.success("Trip delete successfully", { id: toastId });
+      }
+    } catch (error) {
+      toast.error("Failed to delete trip", { id: toastId });
+    }
   };
 
-  // console.log(data);
   const columns: GridColDef[] = [
     { field: "destination", headerName: "Destination", width: 400 },
     {
       field: "budget",
       headerName: "Budget",
-      width: 400,
+      width: 200,
     },
     {
-      field: "edit",
-      headerName: "Action",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      renderCell: ({ row }) => {
-        return (
-          <IconButton
-            //  onClick={() => handleDelete(row.id)}
-            aria-label="edit"
-          >
-            <EditIcon />
-          </IconButton>
-        );
-      },
+      field: "type",
+      headerName: "Trip Type",
+      width: 200,
     },
     {
       field: "delete",
@@ -60,10 +57,7 @@ const TripManagement = () => {
       align: "center",
       renderCell: ({ row }) => {
         return (
-          <IconButton
-            //  onClick={() => handleDelete(row.id)}
-            aria-label="delete"
-          >
+          <IconButton onClick={() => handleDelete(row.id)} aria-label="delete">
             <DeleteIcon />
           </IconButton>
         );
