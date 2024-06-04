@@ -20,24 +20,25 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme, useMediaQuery } from "@mui/material";
+import useTheme from "@mui/material/styles/useTheme";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import logo from "@/assets/logo.png";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
-
-const Header = () => {
+const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const user = useAppSelector(selectCurrentUser);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, seIsLoading] = useState(true);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  console.log(user, isLoading);
 
   const handleLogout = () => {
     const toastId = toast.loading("loading...");
@@ -47,8 +48,10 @@ const Header = () => {
   };
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if (user) {
+      seIsLoading(false);
+    }
+  }, [user]);
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -174,7 +177,7 @@ const Header = () => {
                   About Us
                 </Button>
               </Link>
-              {user && (
+              {!isLoading && user && (
                 <>
                   <Link href="/travels" passHref>
                     <Button
@@ -194,7 +197,7 @@ const Header = () => {
                   </Link>
                 </>
               )}
-              {isMounted && user ? (
+              {!isLoading && user ? (
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open Menu">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -244,4 +247,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Navbar;

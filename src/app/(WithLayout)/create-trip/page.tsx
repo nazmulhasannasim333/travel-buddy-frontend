@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -9,8 +9,8 @@ import {
   Grid,
   Autocomplete,
 } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCurrentUser } from "@/redux/features/auth/authSlice";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Controller, useForm, FieldValues } from "react-hook-form";
@@ -33,10 +33,12 @@ const PostTravelTrip = () => {
     initialActivityOptions
   );
 
-  if (!user) {
-    router.push("/login");
-    return null;
-  }
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user, router]);
+  console.log(user);
 
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Creating trip...");

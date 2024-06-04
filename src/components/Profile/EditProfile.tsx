@@ -8,7 +8,7 @@ const ProfileEdit = () => {
   const [name, setName] = useState("");
   const [updateProfile] = useUpdateProfileMutation();
 
-  const handleSave = async (e) => {
+  const handleSave = async (e: any) => {
     e.preventDefault();
     const toastId = toast.loading("Updating...");
     try {
