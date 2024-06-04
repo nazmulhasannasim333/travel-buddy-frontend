@@ -14,7 +14,6 @@ const TripApi = baseApi.injectEndpoints({
     }),
     getAllTrips: builder.query({
       query: (query) => {
-        console.log(query);
         return {
           url: `/trips`,
           method: "GET",

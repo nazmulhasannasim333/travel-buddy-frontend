@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -108,6 +108,13 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isLoading, seIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      seIsLoading(false);
+    }
+  }, [user]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -207,7 +214,7 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
                       fontWeight: "600",
                     }}
                   >
-                    {user?.name}
+                    {!isLoading && user && user?.name}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -216,7 +223,7 @@ const DashboardDrawer: React.FC<DashboardDrawerProps> = ({ children }) => {
                       fontWeight: "300",
                     }}
                   >
-                    {user?.email}
+                    {!isLoading && user && user?.email}
                   </Typography>
                 </Box>
                 <Menu

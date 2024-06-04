@@ -32,9 +32,7 @@ const Register = () => {
         password: data.password,
         profile,
       };
-      console.log(userInfo);
       const res: any = await registerUser(userInfo);
-      console.log(res);
       if (res?.error) {
         toast.error(`${data.email} Already used`, {
           id: toastId,

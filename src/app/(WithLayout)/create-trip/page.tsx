@@ -38,7 +38,6 @@ const PostTravelTrip = () => {
       router.push("/login");
     }
   }, [user, router]);
-  console.log(user);
 
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Creating trip...");

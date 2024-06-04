@@ -38,8 +38,6 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  console.log(user, isLoading);
-
   const handleLogout = () => {
     const toastId = toast.loading("loading...");
     dispatch(logout());
@@ -178,24 +176,24 @@ const Navbar = () => {
                 </Button>
               </Link>
               {!isLoading && user && (
-                <>
-                  <Link href="/travels" passHref>
-                    <Button
-                      variant="text"
-                      sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
-                    >
-                      Travels
-                    </Button>
-                  </Link>
-                  <Link href="/dashboard" passHref>
-                    <Button
-                      variant="text"
-                      sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
-                    >
-                      Dashboard
-                    </Button>
-                  </Link>
-                </>
+                <Link href="/travels" passHref>
+                  <Button
+                    variant="text"
+                    sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
+                  >
+                    Travels
+                  </Button>
+                </Link>
+              )}
+              {!isLoading && user && user?.role === "ADMIN" && (
+                <Link href="/dashboard" passHref>
+                  <Button
+                    variant="text"
+                    sx={{ color: "#fff", "&:hover": { color: "#ddd" } }}
+                  >
+                    Dashboard
+                  </Button>
+                </Link>
               )}
               {!isLoading && user ? (
                 <Box sx={{ flexGrow: 0 }}>
